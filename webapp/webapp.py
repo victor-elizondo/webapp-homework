@@ -8,9 +8,9 @@ from sklearn.feature_extraction.text import CountVectorizer
 
 ### API URL Definition, choose one of them depending the case:
 # This works for running stand alone
-API_URL = 'http://localhost:8000'      
+#API_URL = 'http://localhost:8000'      
 # This work for containerized running
-#API_URL = 'http://host.docker.internal:8000'   
+API_URL = 'http://host.docker.internal:8000'   
 
 API_PATH = '/get_items_for_shops/'
 
