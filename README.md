@@ -18,7 +18,9 @@ Both modules have been containerized
 ## To build and run the API (from api/ folder)
     docker build -t api-image .     
     docker run -d --name api-container -p 8000:8000 api-image
+The API will be listening at http://<server_url>:8000/
 
-## To build and run the WebApp (from webapp/ folder)
+## To build and run the WebApp (from webap/ folder)
     docker build -t streamlit-image .    
     docker run -d --name container-streamlit -p 8501:8501 streamlit-image
+The WebApp will be listening at http://<server_url>:8501/
