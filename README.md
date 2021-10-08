@@ -15,10 +15,10 @@ For the API I used FastAPI and for the Webapp Streamlit.
 For the meaningful terms extraction I used a simple feature extraction NLP algorithm using the scikit-learn library to count words along the whole text and also removing the stop-words.
 Both modules have been containerized
 
-## To build and run the API
+## To build and run the API (from api/ folder)
     docker build -t api-image .     
     docker run -d --name api-container -p 8000:8000 api-image
 
-## To build and run the WebApp
+## To build and run the WebApp (from webapp/ folder)
     docker build -t streamlit-image .    
     docker run -d --name container-streamlit -p 8501:8501 streamlit-image
