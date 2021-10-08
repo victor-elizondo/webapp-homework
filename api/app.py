@@ -1,10 +1,8 @@
 import requests
 import logging
-import json
 import logging.config as config_logger
 from fastapi import FastAPI, params
 
-from typing import ItemsView, Optional
 
 app = FastAPI()
 s = requests.Session()
@@ -40,7 +38,6 @@ def ping():
     else:
         return('oops')
 
-
 @app.get("/get_shops/")
 def get_shops(shop_name: str="simon", limit: int = 10):
     """"
@@ -59,16 +56,18 @@ def get_shops(shop_name: str="simon", limit: int = 10):
     logger.info(f"{r.url}")
     logger.info(f"{r.status_code}")
     shop_ids = []
+    shop_names = []
     if (r.status_code == requests.codes.ok):
         for idx, shop in enumerate(r.json()['results']):
             logger.info(f"{idx}| {shop['shop_id']}  | {shop['shop_name']}")
             shop_ids.append(shop['shop_id'])
-        return(shop_ids)
+            shop_names.append(shop['shop_name'])
+        return([shop_ids, shop_names])
     else:
         return(f"Error, reason: {[r.json()]}")
 
 @app.get("/get_items/")
-def get_items(shop_id: int):
+def get_items(shop_id: int, shop_name: str):
     """"
     Gets total items that are being sold on the shop given a shop_id
 
@@ -92,6 +91,7 @@ def get_items(shop_id: int):
         #logger.info(f"{r.json()['results'][idx%CHUNK_SIZE]['listing_id']}")
         item = {
             "shop_id" : r.json()['results'][idx%CHUNK_SIZE]['shop_id'],
+            "shop_name" : shop_name,
             "listing_id" : r.json()['results'][idx%CHUNK_SIZE]['listing_id'],
             "title" : r.json()['results'][idx%CHUNK_SIZE]['title'],
             "description" : r.json()['results'][idx%CHUNK_SIZE]['description']
@@ -112,11 +112,13 @@ def get_items_for_shops(shop_name: str="simon", limit: int = 10):
         
     """
     logger.info(f"Input name: {shop_name}")
-    shops = get_shops(shop_name, limit)
+    resp = get_shops(shop_name, limit)
+    shops = resp[0]
+    names = resp[1]
     all_items = []
     for idx, shop in enumerate(shops):
         logger.info(f"shop_id:{shop}")
-        all_items.append(get_items(shop))
+        all_items.append(get_items(shop, names[idx]))
     return(all_items)
     """
     s.headers.update({'x-api-key':API_KEY})
